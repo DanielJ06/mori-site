@@ -15,15 +15,14 @@
   --surface: #111;
   --text: #e0e0e0;
   --text-strong: #efedea;
-  --muted: #7d7d7d;
-  --link: #c8c8c8;
+  --muted: #d8d8d8;
+  --link: #efedea;
   --link-hover: #fff;
   --hairline: #181818;
   --ring: rgba(255, 255, 255, 0.06);
 
   --font-heading: Georgia, 'Times New Roman', serif;
   --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -38,7 +37,14 @@
   --gutter: 16px;
   --margin: 32px;
   --u: 8px;
-  --section: 128px;
+
+  /* Section rhythm on the 8px grid: the essay gets long rests around it,
+     the everyday list reads as an aside inside the features. */
+  --rest-period: 272px;     /* horizon → essay */
+  --rest-paragraph: 360px;  /* essay → features */
+  --rest-aside: 168px;      /* feature cards → everyday list */
+  --rest-page: 304px;       /* features → closing */
+  --rest-sign: 200px;       /* closing → footer */
 
   /* Page accent: Nanquim's navy, in the steps it takes on a dark canvas. */
   --p-accent: #4b72bd;
@@ -317,7 +323,7 @@ kbd {
 
 .hero-icon { margin-bottom: 24px; }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .hero-icon:hover,
   .closing-icon:hover { transform: rotate(-6deg) scale(1.04); }
 }
@@ -352,15 +358,6 @@ kbd {
   justify-content: center;
   gap: 8px;
   margin-top: 32px;
-}
-
-.meta {
-  margin-top: 16px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  line-height: 16px;
-  letter-spacing: 0.01em;
-  color: #5c5c5c;
 }
 
 /* ───────────── Showcase ───────────── */
@@ -746,7 +743,8 @@ kbd {
   vertical-align: -0.2em;
   background: var(--m-accent);
   border-radius: 1px;
-  animation: blink 1.06s steps(1) infinite;
+  /* Blinks for ~5s after each burst of typing, then rests solid. */
+  animation: blink 1.06s steps(1) 5;
 }
 
 .caret.is-typing { animation: none; }
@@ -792,11 +790,16 @@ kbd {
   transition: stroke-dashoffset 0.3s var(--ease-out) 0.05s, opacity 0.1s linear;
 }
 
-.task.is-done { color: var(--m-text-3); }
-.task.is-done .check { background: var(--m-accent); box-shadow: inset 0 0 0 1.25px var(--m-accent); }
-.task.is-done .check svg { stroke-dashoffset: 0; opacity: 1; }
+.task.is-done,
+.md-task.is-checked { color: var(--m-text-3); }
 
-blockquote {
+.task.is-done .check,
+.md-task.is-checked .check { background: var(--m-accent); box-shadow: inset 0 0 0 1.25px var(--m-accent); }
+
+.task.is-done .check svg,
+.md-task.is-checked .check svg { stroke-dashoffset: 0; opacity: 1; }
+
+.w-doc blockquote {
   margin: 4px 0 16px;
   padding-left: 16px;
   box-shadow: inset 2px 0 0 var(--m-border-strong);
@@ -935,9 +938,145 @@ h2 {
 }
 
 
+/* ───────────── Essay ─────────────
+   The rests around it come from its neighbours: --rest-period above,
+   the paragraph break that .highlights carries below. */
+
+.essay {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  /* Empty space above, outside the section, so the picture and copy stay
+     centred on each other. */
+  margin-top: calc(var(--rest-period) * 0.4);
+  min-height: clamp(520px, 76vh, 700px);
+  --lead: calc(var(--rest-period) * 0.2);
+  padding-top: var(--lead);
+  /* Below the copy: a tail where the dots finish settling, then a short rest. */
+  --tail: calc(var(--rest-paragraph) / 3);
+  --after: calc(var(--tail) * 0.4);
+  padding-bottom: calc(var(--tail) + var(--after));
+  overflow-x: clip;
+}
+
+.essay-copy {
+  position: relative;
+  z-index: 2;
+  top: -24px; /* a touch above the picture's centre reads as centred */
+}
+
+/* Like the app at the horizon, the section darkens into the page at its
+   foot instead of ending on an edge: picture and dots both sink into it. */
+.essay::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: auto 0 0;
+  /* Tall enough to reach up over the picture, where the content actually is. */
+  height: calc(var(--tail) * 2.8 + var(--after));
+  /* Stops follow an ease-in-out curve, so the dark gathers gently and settles
+     without a visible start or end. */
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--bg) 4%, transparent) 10%,
+    color-mix(in srgb, var(--bg) 14%, transparent) 22%,
+    color-mix(in srgb, var(--bg) 32%, transparent) 36%,
+    color-mix(in srgb, var(--bg) 56%, transparent) 50%,
+    color-mix(in srgb, var(--bg) 78%, transparent) 63%,
+    color-mix(in srgb, var(--bg) 92%, transparent) 75%,
+    color-mix(in srgb, var(--bg) 98%, transparent) 87%,
+    var(--bg)
+  );
+  pointer-events: none;
+}
+
+/* One field of dots over the whole section, picture included: loose at the
+   top, settled onto the page's lattice by the bottom. */
+.essay-dots {
+  position: absolute;
+  z-index: 1;
+  inset: 0 0 var(--after);
+  pointer-events: none;
+  user-select: none;
+}
+
+.essay-dots canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The picture is the section's backdrop: light on a dark ground, anchored to
+   the right and running off the page's edge, with the copy on the dark side. */
+.essay-art {
+  position: absolute;
+  z-index: -1;
+  /* Centred between the same two lines as the copy, so they share one axis. */
+  inset-block: var(--lead) calc(var(--tail) + var(--after));
+  right: -9vw;
+  width: min(1100px, 78vw);
+  height: fit-content;
+  margin: auto 0;
+  pointer-events: none;
+  user-select: none;
+  /* The bottom of the picture dissolves into the dots. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+}
+
+.essay-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .essay-art img { animation: drift 9s ease-in-out infinite alternate; }
+}
+
+@keyframes drift {
+  from { transform: translate3d(0, 4px, 0) rotate(0.4deg); }
+  to { transform: translate3d(0, -10px, 0) rotate(-0.6deg); }
+}
+
+/* Narrow screens: the copy first, the picture rising out of the dark below it. */
+@media (max-width: 900px) {
+  .essay {
+    display: block;
+    min-height: 0;
+  }
+
+  .essay-art {
+    position: relative;
+    z-index: 0;
+    right: auto;
+    width: 130%;
+    margin: 0 -15%;
+  }
+}
+
+.essay-body {
+  max-width: 36rem;
+  margin-top: 16px;
+  font-size: 1.05rem;
+  line-height: 28px;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.essay-body p + p { margin-top: 16px; }
+
+/* The last line is the conclusion, so it steps away from the paragraph. */
+.essay-body .essay-end {
+  margin-top: 32px;
+  color: var(--text-strong);
+}
+
 /* ───────────── Highlights ───────────── */
 
-.highlights { margin-top: var(--section); }
+.highlights { margin-top: 0; }
 
 .section-head { margin-bottom: 48px; }
 
@@ -969,7 +1108,12 @@ h2 {
   grid-template-rows: subgrid;
   row-gap: 0;
   border-radius: 20px;
-  background: var(--surface);
+  /* Cool, not bright: the navy of the page's accent, faint at the top left,
+     over a surface that only deepens toward the bottom right. Nothing is
+     lighter than the flat surface was, so the cards stay in the page's hue. */
+  background:
+    radial-gradient(110% 80% at 0% 0%, color-mix(in srgb, var(--p-accent-subtle) 12%, transparent), transparent 60%),
+    linear-gradient(160deg, var(--surface), color-mix(in srgb, #000 6%, var(--surface)));
   box-shadow: inset 0 0 0 1px var(--ring);
   overflow: hidden;
 }
@@ -978,10 +1122,10 @@ h2 {
    otherwise fold half of it into its own rows. */
 .card:nth-child(n + 3) { margin-top: var(--gutter); }
 
-.card--focus  { grid-column: span 7; }
-.card--links  { grid-column: span 5; }
-.card--own    { grid-column: span 5; }
-.card--comfort { grid-column: span 7; }
+.card--markdown { grid-column: span 7; }
+.card--links    { grid-column: span 5; }
+.card--own      { grid-column: span 5; }
+.card--themes   { grid-column: span 7; }
 
 /* Card insets are 32 = two gutters. */
 /* Title and description run the card's full width, so a wide card doesn't
@@ -1024,171 +1168,86 @@ h2 {
   color: var(--m-text-3);
 }
 
-/* Focus */
+/* Links: the scene floats complete, with air under it — the other cards
+   crop at the card's edge. */
 
-.mini {
+.card--links .card-visual {
   display: flex;
-  height: 360px;
-  overflow: hidden;
-  background: var(--m-canvas);
-  color: var(--m-text);
-  border-radius: 12px 12px 0 0;
-  box-shadow: 0 0 0 1px var(--m-edge);
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 32px;
 }
-
-.mini-side,
-.mini-list {
-  flex: none;
-  overflow: hidden;
-  /* Rewinding is quicker than playing: the exit shouldn't make you wait. */
-  transition: width 0.4s var(--ease-out), opacity 0.25s ease, padding 0.4s var(--ease-out);
-}
-
-.mini-side {
-  width: 104px;
-  padding: 16px 12px;
-  background: var(--m-sidebar);
-}
-
-.mini-side i {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 4px;
-  border-radius: 50%;
-  background: #ff5f57;
-}
-
-.mini-side i:nth-child(2) { background: #febc2e; }
-.mini-side i:nth-child(3) { background: #28c840; }
-
-.mini-side b,
-.mini-list b {
-  display: block;
-  border-radius: 4px;
-}
-
-.mini-side b {
-  height: 8px;
-  margin-top: 16px;
-  background: color-mix(in srgb, var(--m-text) 12%, transparent);
-}
-
-.mini-side b:nth-of-type(1) { margin-top: 24px; width: 80%; background: color-mix(in srgb, var(--m-text) 20%, transparent); }
-.mini-side b:nth-of-type(2) { width: 60%; }
-.mini-side b:nth-of-type(3) { width: 70%; }
-.mini-side b:nth-of-type(4) { width: 50%; }
-
-.mini-list {
-  width: 136px;
-  padding: 32px 12px;
-  background: var(--m-panel);
-  box-shadow: inset -1px 0 0 var(--m-sep);
-}
-
-.mini-list b {
-  height: 40px;
-  margin-bottom: 8px;
-  border-radius: 8px;
-  background: var(--m-well);
-}
-
-.mini-list b:first-child { background: var(--m-selected); }
-
-/* Same 32 at the top as the list beside it, so the first line of each starts together. */
-.mini-editor {
-  flex: 1;
-  min-width: 0;
-  padding: 32px;
-  font-size: 12.5px;
-  line-height: 20px;
-}
-
-.mini-editor > * {
-  max-width: 360px;
-  margin-inline: auto;
-}
-
-.mini-title {
-  margin-bottom: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 24px;
-}
-
-.mini-editor p + p { margin-top: 8px; }
-
-.card--focus.is-playing .mini-side,
-.card--focus.is-playing .mini-list {
-  width: 0;
-  padding-inline: 0;
-  opacity: 0;
-  transition-duration: 0.55s, 0.35s, 0.55s;
-}
-
-/* Links */
 
 .link-stage {
   position: relative;
-  height: 360px;
+  width: min(100%, 400px);
+  margin-inline: auto;
   font-size: 12.5px;
   line-height: 20px;
   color: var(--m-text);
 }
 
-.note-a,
-.note-b {
-  position: absolute;
-  border-radius: 12px;
-  box-shadow: 0 0 0 1px var(--m-edge), 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+.link-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.note-a {
-  top: 0;
-  left: 0;
-  width: 70%;
-  padding: 16px;
-  background: var(--m-canvas);
+/* The row of the hub itself reaches into the card's inset, so the notes on
+   its sides have room to be named. */
+.n-hub-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin: 56px -24px;
 }
 
-.note-b {
-  top: 152px;
-  right: 0;
-  width: 68%;
-  padding: 16px 8px 8px;
-  background: var(--m-panel);
-}
-
-.n-title {
-  margin-bottom: 4px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
-}
-
-.note-b .n-title { padding: 0 8px; }
-
-.n-link {
-  border-radius: 3px;
-  color: var(--m-accent-text);
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--m-accent-text) 40%, transparent);
-  text-underline-offset: 3px;
-  transition: background-color 0.3s ease;
-}
-
-.n-back {
+/* A hub and its spokes: the note in the middle is the one everything links to. */
+.n-hub,
+.n-chip {
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 28px;
-  padding: 0 8px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
+  min-width: 0;
+  border-radius: 10px;
+  background: var(--m-canvas);
+  box-shadow: 0 0 0 1px var(--m-edge), 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.3s ease;
 }
 
-.n-back svg { color: var(--m-text-3); }
-.n-back--quiet { color: var(--m-text-2); }
+.n-chip {
+  padding: 6px 12px;
+  color: var(--m-text-2);
+  white-space: nowrap;
+}
+
+.link-row .n-chip { max-width: calc(50% - 8px); }
+
+.n-chip > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.n-hub {
+  flex: none;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--m-text);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--m-accent) 35%, var(--m-edge)), 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.n-chip svg,
+.n-hub svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--m-text-3);
+}
+
+.n-hub svg { color: var(--m-accent-text); }
 
 .thread {
   position: absolute;
@@ -1200,14 +1259,12 @@ h2 {
   pointer-events: none;
 }
 
-.thread circle { fill: var(--m-accent); }
-
 .thread path {
   fill: none;
   stroke-linecap: round;
 }
 
-/* The thread always rests on screen; a gradient pulse (see script.js) travels over it on hover. */
+/* The lines always rest on screen; a gradient pulse (see script.js) travels over them on hover. */
 .thread-base {
   stroke: var(--m-accent);
   stroke-opacity: 0.3;
@@ -1215,17 +1272,20 @@ h2 {
 }
 
 .thread-pulse {
-  stroke: url(#thread-pulse);
   stroke-width: 2;
 }
 
 .thread stop { stop-color: var(--m-accent); }
 
-.card--links.is-playing .n-link { background: color-mix(in srgb, var(--m-accent) 16%, transparent); }
-/* The backlink lights up once the thread reaches it; letting go clears it at once. */
-.card--links.is-playing .n-back:first-of-type {
-  background: var(--m-selected);
-  transition: background-color 0.3s ease 0.45s;
+/* The spokes light up as the pulse leaves them, the hub once it arrives;
+   letting go clears both at once. */
+.card--links.is-playing .n-chip {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--m-accent) 40%, var(--m-edge)), 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.card--links.is-playing .n-hub {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--m-accent) 75%, var(--m-edge)), 0 0 32px -6px color-mix(in srgb, var(--m-accent) 45%, transparent);
+  transition: box-shadow 0.4s ease 0.55s;
 }
 
 /* Own — the notes are plain files, shown in a Finder window. */
@@ -1297,6 +1357,12 @@ h2 {
   transition: background-color 0.15s ease;
 }
 
+.f-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .f-row:nth-of-type(even) { background: var(--m-hover); }
 .f-row svg { color: var(--m-text-3); }
 
@@ -1305,233 +1371,287 @@ h2 {
 }
 
 .f-row time {
+  flex: none;
   margin-left: auto;
+  padding-left: 8px;
   color: var(--m-text-3);
   font-variant-numeric: tabular-nums;
 }
 
-/* Comfort — the app's Ajustes, working on a page of text. */
+/* Markdown — a note writes itself. Each piece of syntax ([data-md]) shows
+   while the caret is inside it and folds away once the caret moves on. */
 
-.reader {
-  position: relative;
-  height: 100%;
-}
-
-/* The page runs up to the panel (256 wide, overlapping it by 24). The size
-   slider changes the type, not the rhythm: line boxes still snap to 4. */
-.reader-page {
-  width: min(calc(100% - 232px), 560px);
-  min-height: calc(100% + 16px);
-  padding: 24px;
+.md-page {
+  height: 360px;
+  overflow: hidden;
   border-radius: 12px 12px 0 0;
   color: var(--m-text);
   background: var(--m-canvas);
   box-shadow: 0 0 0 1px var(--m-edge);
-  font-size: var(--size);
-  line-height: 1.6;
-  line-height: round(up, 1.6em, 4px);
-  transition: background-color 0.35s var(--ease-out), color 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
 }
 
-.reader-page p + p { margin-top: 8px; }
+.md-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 40px;
+  padding: 0 16px;
+  box-shadow: inset 0 -1px 0 var(--m-sep);
+}
 
-.reader-title {
-  margin-bottom: 8px;
-  font-size: calc(var(--size) * 1.35);
+.md-bar .t-lights { left: 16px; }
+
+.md-doc {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 32px 32px 0;
+  font-size: 13.5px;
+  line-height: 24px;
+}
+
+.md-doc > * + * { margin-top: 8px; }
+.md-doc > .is-pending { display: none; }
+
+.md-h {
+  margin-bottom: 4px;
+  font-size: 22px;
   font-weight: 600;
-  line-height: 1.25;
-  line-height: round(up, 1.25em, 4px);
+  line-height: 32px;
   letter-spacing: -0.01em;
 }
 
-/* The panel keeps the page's dark chrome; only the note takes the theme.
-   14 outer = 6 padding + 8 row. */
-.prefs {
+/* Folded, a mark takes no room; open, it pushes the line apart for itself. */
+.md-mark {
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+  vertical-align: bottom;
+  white-space: pre;
+  font-weight: 400;
+  color: var(--m-text-3);
+  opacity: 0;
+  transition: max-width 0.4s var(--ease-out), opacity 0.25s ease;
+}
+
+.is-raw .md-mark {
+  max-width: 3em;
+  opacity: 1;
+  transition-duration: 0.12s;
+}
+
+/* Kept on one line: a folded mark left at a line's end would wrap away from
+   its words and leave a sliver of highlight behind. */
+.md-hl {
+  white-space: nowrap;
+  border-radius: 2px;
+  transition: background-color 0.3s ease;
+}
+
+.md-hl.is-done {
+  padding: 0 1px;
+  background: var(--m-highlight);
+}
+
+.md-b.is-done { font-weight: 600; }
+
+/* The list marker turns into a checkbox once it's written and left behind. */
+.md-taskmark .check {
+  display: none;
+  margin-right: 8px;
+  vertical-align: -2px;
+}
+
+.md-taskmark.is-done:not(.is-raw) .check {
+  display: inline-grid;
+  animation: pop-in 0.25s var(--ease-out);
+}
+
+.md-task { transition: color 0.3s ease; }
+
+/* Themes — three notes, each in its theme's dark appearance, fanned across
+   the card. --k is a note's depth, 0 at the front, on the right. Each step
+   back slides left, sits lower and dims. Colors come from MoriTheme+*.swift. */
+
+[data-theme="nanquim"] {
+  --canvas: #0c0b0a; --bar: #131210; --text: #d6d3cf; --text-2: #908b85; --text-3: #7d7872;
+  --border: #211f1c; --accent: #4b72bd; --accent-text: #a0bbeb; --subtle: #14223d; --highlight: #183060;
+}
+
+[data-theme="pergaminho"] {
+  --canvas: #211a14; --bar: #251f18; --text: #dad2c3; --text-2: #9c9587; --text-3: #847d6f;
+  --border: #302921; --accent: #ae6509; --accent-text: #e9aa71; --subtle: #402710; --highlight: #5a3207;
+}
+
+[data-theme="floresta"] {
+  --canvas: #1d2728; --bar: #202b2b; --text: #d9cfb6; --text-2: #a99f87; --text-3: #8a8770;
+  --border: #283531; --accent: #587f34; --accent-text: #9eba88; --subtle: #2e3827; --highlight: #3d4934;
+}
+
+.deck {
+  position: relative;
+  height: 100%;
+}
+
+.t-page {
+  --step: 39%; /* of the note's own width: three notes at 56% then span the card */
   position: absolute;
-  top: 32px;
+  top: 0;
   right: 0;
-  width: 256px;
-  padding: 16px;
-  border-radius: 14px;
-  background: #161514;
+  z-index: calc(10 - var(--k));
+  width: 56%;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 12px;
+  color: var(--text);
+  background: var(--canvas);
   box-shadow:
-    inset 0 0 0 1px rgba(235, 233, 231, 0.09),
-    0 24px 48px -12px rgba(0, 0, 0, 0.8);
+    0 0 0 1px rgba(235, 233, 231, 0.09),
+    -16px 0 32px -12px rgba(0, 0, 0, 0.7);
   font-size: 12.5px;
   line-height: 20px;
-  color: #d6d3cf;
+  translate: calc(var(--k) * var(--step) * -1) calc(var(--k) * 24px);
 }
 
-.prefs-title {
-  margin-bottom: 12px;
-  font-weight: 600;
-}
-
-.prefs-row {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  color: #908b85;
-}
-
-.prefs-row + .prefs-row {
-  margin-top: 16px;
-  padding-top: 16px;
-  box-shadow: inset 0 1px 0 rgba(235, 233, 231, 0.07);
-}
-
-.prefs-row > span {
-  display: flex;
-  justify-content: space-between;
-}
-
-.prefs output {
-  color: #d6d3cf;
-  font-variant-numeric: tabular-nums;
-}
-
-/* 10 outer = 4 padding + 6 inner. The selection is one thumb that slides
-   between the options rather than a background that jumps. */
-.seg {
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 10px;
-  background: #0c0b0a;
-  box-shadow: inset 0 0 0 1px rgba(235, 233, 231, 0.07);
-}
-
-.seg::before {
+/* The further back, the more of the card's dark it takes on. */
+.t-page::after {
   content: '';
   position: absolute;
-  z-index: -1;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc(50% - 6px);
-  border-radius: 6px;
-  background: #211f1c;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 1px 2px rgba(0, 0, 0, 0.5);
-  transition: translate 0.2s var(--ease-out);
+  inset: 0;
+  background: var(--surface);
+  opacity: calc(var(--k) * 0.28);
+  pointer-events: none;
 }
 
-.seg:has(> :last-child[aria-checked="true"])::before { translate: calc(100% + 4px) 0; }
-
-.seg button {
+.t-bar {
   position: relative;
-  flex: 1;
-  height: 28px;
-  border-radius: 6px;
-  font-size: 12px;
-  color: #908b85;
-  transition-property: transform, color, background-color;
-  transition-duration: 0.16s;
-  transition-timing-function: var(--ease-out);
-}
-
-.seg button::after {
-  content: '';
-  position: absolute;
-  inset: -6px 0;
-}
-
-.seg button:active { transform: scale(0.96); }
-
-.seg button[aria-checked="true"] { color: #ebe9e7; }
-
-@media (hover: hover) and (pointer: fine) {
-  .seg button:hover { color: #ebe9e7; }
-}
-
-/* 32px tall to be easy to grab; the negative margin keeps the 20px it
-   used to take in the panel's rhythm. */
-.prefs input[type="range"] {
-  width: 100%;
+  display: flex;
+  align-items: center;
   height: 32px;
-  margin: -6px 0;
-  background: none;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  --fill: calc((var(--value, 15) - 12) / 8 * 100%);
+  background: var(--bar);
+  box-shadow: inset 0 -1px 0 var(--border);
 }
 
-.prefs input[type="range"]::-webkit-slider-runnable-track {
-  height: 4px;
-  border-radius: 2px;
-  background: linear-gradient(to right, var(--p-accent) var(--fill), #302d29 var(--fill));
+.t-lights {
+  position: absolute;
+  left: 12px;
+  display: flex;
+  gap: 6px;
 }
 
-.prefs input[type="range"]::-moz-range-track {
-  height: 4px;
-  border-radius: 2px;
-  background: #302d29;
-}
-
-.prefs input[type="range"]::-moz-range-progress {
-  height: 4px;
-  border-radius: 2px;
-  background: var(--p-accent);
-}
-
-.prefs input[type="range"]::-webkit-slider-thumb {
-  width: 16px;
-  height: 16px;
-  margin-top: -6px;
+.t-lights i {
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  background: #ebe9e7;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  -webkit-appearance: none;
-  appearance: none;
-  transition: transform 0.16s var(--ease-out);
+  background: #ff5f57;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.25);
 }
 
-.prefs input[type="range"]::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  border: 0;
-  border-radius: 50%;
-  background: #ebe9e7;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+.t-lights i:nth-child(2) { background: #febc2e; }
+.t-lights i:nth-child(3) { background: #28c840; }
+
+.t-doc { padding: 24px; }
+.t-doc > * + * { margin-top: 8px; }
+
+.t-title {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.01em;
 }
 
-.prefs input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.12); }
-
-.prefs input[type="range"]:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--p-accent-text) 70%, transparent);
-  outline-offset: 4px;
+.t-chip {
+  padding: 1px 4px 2px;
   border-radius: 4px;
+  color: var(--accent-text);
+  background: var(--subtle);
+}
+
+.t-doc mark {
+  padding: 0 1px;
+  border-radius: 2px;
+  color: inherit;
+  background: var(--highlight);
+}
+
+.t-doc blockquote {
+  padding-left: 14px;
+  color: var(--text-2);
+  box-shadow: inset 2px 0 0 var(--border);
+}
+
+.t-task {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.t-task + .t-task { margin-top: 4px; }
+
+.t-task i {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1.25px var(--text-3);
+}
+
+.t-task.is-done { color: var(--text-3); }
+
+.t-task.is-done i {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6.2l2.3 2.3 4.7-5'/%3E%3C/svg%3E") center / 10px no-repeat,
+    var(--accent);
+  box-shadow: none;
 }
 
 @media (max-width: 640px) {
-  .reader-page { width: 100%; padding: 24px; }
-  .prefs { top: auto; bottom: 0; width: 100%; }
+  .t-page { --step: 21%; width: 70%; }
+}
+
+/* App pictures are not interactive: no pointer cursor, nothing selectable. */
+.window,
+.card-visual,
+.mc-icon,
+.hero-icon,
+.closing-icon,
+.footer-leaf {
+  cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* ───────────── Everyday features ───────────── */
 
-/* A quiet list, not a wall of cards: eight columns wide (columns 3–10),
-   two items of four columns each. The label and the list share that left edge. */
-.more-label,
-.more {
-  --unit: calc((100% + var(--gutter)) / 12);
-  margin-left: calc(var(--unit) * 2);
-  max-width: calc(var(--unit) * 8 - var(--gutter));
+/* A quiet list, not a wall of cards: the full twelve columns, three items
+   of four columns each, so every item lands on the grid. The label and the
+   list share the page's left edge. */
+.more-label {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 80px;
+  margin-bottom: 48px;
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2rem);
+  line-height: 40px;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
 }
 
-.more-label {
-  margin-top: 96px;
-  margin-bottom: 24px;
-  font-size: 0.85rem;
-  line-height: 24px;
-  color: #6a6a6a;
+/* Hairlines run out to the edges of the cards above, so the label reads as
+   the next line of the same grid rather than a caption floating under it. */
+.more-label::before,
+.more-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--ring);
 }
 
 .more {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 56px var(--gutter);
   list-style: none;
 }
@@ -1540,7 +1660,9 @@ h2 {
 .mini-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  justify-items: start;
+  justify-items: center;
+  text-align: center;
+  align-content: start; /* a taller neighbour in the row mustn't spread icon, title and text apart */
 }
 
 .mini-card .mc-icon { margin-bottom: 20px; }
@@ -1590,14 +1712,19 @@ h2 {
 
 .mc-icon path { transition: transform 0.45s var(--ease-spring); }
 
+/* These items aren't links, so hover lifts the icon to the text color
+   rather than the accent, which on this page means "clickable". */
 @media (hover: hover) and (pointer: fine) {
-  .mini-card:hover .mc-icon { color: var(--p-accent-text); }
+  .mini-card:hover .mc-icon { color: var(--text); }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .mini-card:hover .mc-icon--tag svg { transform: rotate(-14deg); }
+  .mini-card:hover .mc-icon--offline svg { transform: scale(1.1); }
+  .mini-card:hover .mc-icon--focus svg { transform: scale(1.12); }
+  .mini-card:hover .mc-icon--keys svg { transform: translateY(-1.5px); }
+  .mini-card:hover .mc-icon--code svg { transform: scale(1.1) rotate(-4deg); }
   .mini-card:hover .mc-icon--search svg { transform: translate(-1.5px, -1.5px) scale(1.12); }
-  .mini-card:hover .mc-icon--pin svg { transform: translateY(-2px) rotate(10deg); }
-  .mini-card:hover .mc-icon--windows path { transform: translate(1.5px, -1.5px); }
-  .mini-card:hover .mc-icon--import path:first-child { transform: translateY(2px); }
-  .mini-card:hover .mc-icon--capture svg { transform: rotate(-10deg) scale(1.08); }
 }
 
 /* ───────────── Responsive ───────────── */
@@ -1605,18 +1732,27 @@ h2 {
 @media (max-width: 960px) {
   :root {
     --margin: 24px;
-    --section: 96px;
+    --rest-period: 200px;
+    --rest-paragraph: 256px;
+    --rest-aside: 128px;
+    --rest-page: 224px;
+    --rest-sign: 152px;
   }
 
   .bento > .card { grid-column: span 12; }
+  .more { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .card:nth-child(2) { margin-top: var(--gutter); }
-  .card--links .link-stage { max-width: 520px; }
+  .card--links .link-stage { width: min(100%, 480px); }
 }
 
 @media (max-width: 640px) {
   :root {
     --margin: 16px;
-    --section: 80px;
+    --rest-period: 144px;
+    --rest-paragraph: 192px;
+    --rest-aside: 96px;
+    --rest-page: 168px;
+    --rest-sign: 120px;
   }
 
   .hero { padding-top: 48px; }
@@ -1625,13 +1761,10 @@ h2 {
   .card h3 { padding: 24px 24px 0; }
   .card-desc { padding: 8px 24px 0; }
   .card-visual { padding: 24px 24px 0; }
-  .mini-side { width: 64px; }
-  .mini-list { width: 88px; }
-  .more-label,
-  .more { margin-left: 0; max-width: none; }
-  .more-label { margin-top: 64px; }
+  .card--links .card-visual { padding: 24px 24px 32px; }
+  .more-label { margin-top: 64px; margin-bottom: 32px; }
   .more { grid-template-columns: minmax(0, 1fr); row-gap: 32px; }
-  .mini-card { grid-template-columns: 40px minmax(0, 1fr); column-gap: 16px; }
+  .mini-card { grid-template-columns: 40px minmax(0, 1fr); column-gap: 16px; justify-items: start; text-align: left; }
   .mini-card .mc-icon { grid-row: span 2; margin-bottom: 0; }
   .mini-card h3 { padding-top: 8px; }
   .section-head { margin-bottom: 32px; }
@@ -1646,8 +1779,24 @@ h2 {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-top: var(--section);
+  margin-top: var(--rest-page);
   padding: 0 var(--margin);
+}
+
+/* Dots along both sides of the page, thinning toward the middle; script.js
+   draws them. They run a little past the section so its edges never show. */
+.closing-dots {
+  position: absolute;
+  z-index: -1;
+  inset: -96px 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.closing-dots canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .closing::before {
@@ -1674,22 +1823,38 @@ h2 {
   vertical-align: -0.1em;
   border-radius: 1px;
   background: var(--p-accent-text);
-  animation: blink 1.06s steps(1) infinite;
+  animation: blink 1.06s steps(1) 5;
 }
 
 /* ───────────── Footer ───────────── */
 
 .footer {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 16px;
-  margin-top: var(--section);
+  margin-top: var(--rest-sign);
   padding: 32px 0 48px;
   font-size: 0.8rem;
   line-height: 24px;
-  color: #5c5c5c;
-  box-shadow: inset 0 1px 0 var(--hairline);
+  color: var(--muted);
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.07) 12%, rgba(255, 255, 255, 0.07) 88%, transparent);
+}
+
+.footer-heart {
+  width: 13px;
+  height: 13px;
+  margin: 0 1px;
+  vertical-align: -2px;
+  fill: var(--p-accent-text);
 }
 
 .footer nav {
@@ -1698,9 +1863,10 @@ h2 {
   gap: 24px;
 }
 
+/* Links sit a clear step above the --muted text around them. */
 .footer a {
   position: relative;
-  color: #8a8a8a;
+  color: var(--link);
 }
 
 .footer a::after {
@@ -1718,7 +1884,11 @@ h2 {
 
 @media (hover: hover) and (pointer: fine) {
   .footer a:hover { color: var(--link-hover); }
-  .footer-leaf:hover { opacity: 0.9; transform: rotate(-12deg); }
+  .footer-leaf:hover { opacity: 0.9; }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .footer-leaf:hover { transform: rotate(-12deg); }
 }
 
 /* Oversized pixel wordmark: each square is a filled tile with a hairline ring,
@@ -1736,6 +1906,9 @@ h2 {
 .footer-mark img {
   display: block;
   width: 83%;
+  /* The wordmark is 100.2 units wide: a width in whole multiples of that keeps
+     every square a whole number of pixels, instead of alternating 9 and 10. */
+  width: round(down, 83%, 100.2px);
   height: auto;
   margin-inline: auto;
 }
@@ -1836,18 +2009,16 @@ h2 {
 
   .js [data-reveal] { transition: opacity 0.4s ease; }
 
-  .seg::before { transition: none; }
-
   .caret,
   .closing-caret,
   .is-ready .horizon canvas,
   .suggest,
-  .wikilink.is-new {
+  .wikilink.is-new,
+  .md-taskmark .check {
     animation: none;
   }
 
-  .mini-side,
-  .mini-list,
-  .reader-page,
-  .reader-page p { transition: none; }
+  .md-mark,
+  .t-page,
+  .check svg { transition: none; }
 }
