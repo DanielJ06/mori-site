@@ -328,6 +328,12 @@ kbd {
   .closing-icon:hover { transform: rotate(-6deg) scale(1.04); }
 }
 
+/* On touch, the same nod answers a press. */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .hero-icon:active,
+  .closing-icon:active { transform: rotate(-6deg) scale(1.04); }
+}
+
 .hero h1 {
   font-family: var(--font-heading);
   font-weight: 400;
@@ -462,7 +468,7 @@ kbd {
   border-radius: inherit;
   box-shadow: inset 0 0 0 1px var(--m-edge);
   /* The app darkens into the horizon rather than ending on an edge. */
-  background: linear-gradient(to bottom, transparent calc(100% - var(--crop) - 200px), var(--bg) calc(100% - var(--crop)));
+  background: linear-gradient(to bottom, transparent calc(100% - var(--crop) - var(--fade, 200px)), var(--bg) calc(100% - var(--crop)));
   pointer-events: none;
 }
 
@@ -896,32 +902,32 @@ kbd {
   .w-sidebar { display: none; }
 }
 
+/* The window's own lights live in the sidebar; the toolbar carries a copy
+   for when the sidebar is gone. */
+.w-toolbar { position: relative; }
+.w-toolbar .t-lights { display: none; }
+
+/* Phones: the note alone, in a window drawn like the Markdown card's: lights
+   on the left of the bar, the note's tools on the right. */
 @media (max-width: 640px) {
   .window {
+    --fade: 104px;
     grid-template-columns: minmax(0, 1fr);
-    height: 520px;
+    height: 456px;
   }
 
   .w-list { display: none; }
-  .w-toolbar { padding-left: 72px; }
-
-  .w-toolbar::before {
-    content: '';
-    position: absolute;
-    top: 15px;
-    left: 16px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #ff5f57;
-    box-shadow: 18px 0 #febc2e, 36px 0 #28c840;
-  }
-
+  .w-toolbar { justify-content: flex-end; }
   .w-toolbar > svg { display: none; }
-  .w-doc { padding: 24px 24px 0; font-size: 13.5px; }
-  .w-title { font-size: 22px; line-height: 28px; }
-  .w-format { gap: 0; }
+  .w-toolbar .t-lights { display: flex; left: 16px; }
+  .w-tools { gap: 14px; }
+
+  .w-doc { padding: 24px 20px 0; font-size: 13px; line-height: 22px; }
+  .w-title { font-size: 20px; line-height: 28px; margin-bottom: 8px; }
+  .w-doc > p { margin-bottom: 10px; }
+  .w-format { bottom: 12px; gap: 0; }
   .w-format > :nth-child(n + 9) { display: none; }
+  .suggest { width: 216px; }
 }
 
 /* ───────────── Headings ───────────── */
@@ -1032,7 +1038,7 @@ h2 {
   height: auto;
 }
 
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference) {
   .essay-art img { animation: drift 9s ease-in-out infinite alternate; }
 }
 
@@ -1041,20 +1047,30 @@ h2 {
   to { transform: translate3d(0, -10px, 0) rotate(-0.6deg); }
 }
 
-/* Narrow screens: the copy first, the picture rising out of the dark below it. */
+/* Narrow screens: the copy first, then the picture floating in the dark
+   below it. The letter, at 55% across the image, sits on the screen's
+   centre; an ellipse around it dissolves the loose sheets before they reach
+   the screen's edges, so nothing is cut off by the glass. */
 @media (max-width: 900px) {
   .essay {
-    display: block;
+    display: flex;
+    flex-direction: column;
     min-height: 0;
+    padding-top: 0;
   }
 
   .essay-art {
+    --art: min(140vw, 880px);
     position: relative;
-    z-index: 0;
-    right: auto;
-    width: 130%;
-    margin: 0 -15%;
+    inset: auto;
+    width: var(--art);
+    margin: 16px 0 0 calc(50% - var(--art) * 0.55);
+    /* 36% across reaches the screen's edges, 46% down stays inside the image. */
+    -webkit-mask-image: radial-gradient(36% 46% at 55% 50%, #000 60%, transparent 100%);
+    mask-image: radial-gradient(36% 46% at 55% 50%, #000 60%, transparent 100%);
   }
+
+  .essay-copy { top: 0; }
 }
 
 .essay-body {
@@ -1605,8 +1621,34 @@ h2 {
   box-shadow: none;
 }
 
+/* Phones: no room to fan them out, so the notes stack like cards in a
+   wallet, the ones behind peeking over the top in their own colours. A tap
+   sends the front one to the back (script.js), and on first sight the deck
+   deals itself once round. */
 @media (max-width: 640px) {
-  .t-page { --step: 21%; width: 70%; }
+  .card--themes .card-visual { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+  /* Each note behind shows its bar and a band of its own page. */
+  .t-page {
+    top: 80px;
+    width: 100%;
+    translate: 0 calc(var(--k) * -38px);
+    scale: calc(1 - var(--k) * 0.07);
+    transform-origin: 50% 0;
+    transition:
+      translate 0.55s var(--ease-spring),
+      scale 0.55s var(--ease-spring),
+      opacity 0.35s ease;
+  }
+
+  .t-page::after { opacity: calc(var(--k) * 0.2); transition: opacity 0.4s ease; }
+
+  /* The front note drops out of the stack before it rejoins at the back. */
+  .t-page.is-leaving {
+    translate: 0 48px;
+    opacity: 0;
+    transition: translate 0.28s var(--ease-out), opacity 0.22s ease;
+  }
 }
 
 /* App pictures are not interactive: no pointer cursor, nothing selectable. */
@@ -1721,10 +1763,39 @@ h2 {
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .mini-card:hover .mc-icon--tag svg { transform: rotate(-14deg); }
   .mini-card:hover .mc-icon--offline svg { transform: scale(1.1); }
-  .mini-card:hover .mc-icon--focus svg { transform: scale(1.12); }
-  .mini-card:hover .mc-icon--keys svg { transform: translateY(-1.5px); }
+  .mini-card:hover .mc-icon--focus svg { transform: rotate(-20deg); }
+  .mini-card:hover .mc-icon--keys svg { transform: rotate(90deg); }
   .mini-card:hover .mc-icon--code svg { transform: scale(1.1) rotate(-4deg); }
   .mini-card:hover .mc-icon--search svg { transform: translate(-1.5px, -1.5px) scale(1.12); }
+}
+
+/* Without a pointer to hover, each icon makes its gesture once as it comes
+   into view, in step with its item's reveal. */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .mc-icon--tag     { --gesture: rotate(-14deg); }
+  .mc-icon--offline { --gesture: scale(1.14); }
+  .mc-icon--search  { --gesture: translate(-1.5px, -1.5px) scale(1.14); }
+  .mc-icon--focus   { --gesture: rotate(-20deg); }
+  .mc-icon--keys    { --gesture: rotate(90deg); }
+  .mc-icon--code    { --gesture: scale(1.12) rotate(-6deg); }
+
+  .mini-card.is-visible .mc-icon {
+    animation: mc-lit 1.6s ease both;
+    animation-delay: calc(var(--d, 0ms) + 280ms);
+  }
+
+  .mini-card.is-visible .mc-icon svg {
+    animation: mc-gesture 0.9s var(--ease-spring) both;
+    animation-delay: calc(var(--d, 0ms) + 280ms);
+  }
+}
+
+@keyframes mc-lit {
+  25%, 60% { color: var(--text); background-color: #1a1a1a; }
+}
+
+@keyframes mc-gesture {
+  45% { transform: var(--gesture); }
 }
 
 /* ───────────── Responsive ───────────── */
@@ -1745,29 +1816,96 @@ h2 {
   .card--links .link-stage { width: min(100%, 480px); }
 }
 
+/* Phones get their own measures, not the desktop's shrunk: a 20px margin,
+   a type scale built for an arm's length (34 / 28 / 20 / 16 / 14), 44px
+   targets, and cards and pictures cut to a screen's height. */
 @media (max-width: 640px) {
   :root {
-    --margin: 16px;
-    --rest-period: 144px;
-    --rest-paragraph: 192px;
-    --rest-aside: 96px;
-    --rest-page: 168px;
-    --rest-sign: 120px;
+    --margin: 20px;
+    --gutter: 12px;
+    --rest-period: 136px;
+    --rest-paragraph: 176px;
+    --rest-aside: 88px;
+    --rest-page: 152px;
+    --rest-sign: 104px;
   }
 
-  .hero { padding-top: 48px; }
-  .showcase { --crop: 96px; margin-top: 48px; }
-  .bento { grid-auto-rows: auto auto 344px; }
-  .card h3 { padding: 24px 24px 0; }
-  .card-desc { padding: 8px 24px 0; }
-  .card-visual { padding: 24px 24px 0; }
-  .card--links .card-visual { padding: 24px 24px 32px; }
-  .more-label { margin-top: 64px; margin-bottom: 32px; }
-  .more { grid-template-columns: minmax(0, 1fr); row-gap: 32px; }
-  .mini-card { grid-template-columns: 40px minmax(0, 1fr); column-gap: 16px; justify-items: start; text-align: left; }
-  .mini-card .mc-icon { grid-row: span 2; margin-bottom: 0; }
-  .mini-card h3 { padding-top: 8px; }
-  .section-head { margin-bottom: 32px; }
+  html { scroll-padding-top: 72px; }
+
+  .nav { height: 56px; }
+  .brand { font-size: 1.2rem; }
+
+  .hero { padding-top: 40px; }
+  .hero-icon,
+  .closing-icon { width: 64px; height: 64px; }
+  .hero-icon { margin-bottom: 20px; }
+  .hero h1 { font-size: 2.125rem; letter-spacing: -0.025em; }
+  .actions { margin-top: 24px; }
+  .actions .button { height: 44px; padding: 0 20px; border-radius: 12px; font-size: 0.9375rem; }
+
+  .showcase { --crop: 88px; margin-top: 40px; }
+
+  /* The window covers the screen's width, so the glow rises over its top
+     edge instead of spreading out to its sides. */
+  .glow {
+    top: -96px;
+    width: 160vw;
+    height: 400px;
+    opacity: 0.9;
+  }
+
+  h2 { font-size: 1.75rem; line-height: 32px; letter-spacing: -0.02em; }
+
+  .essay-body,
+  .section-head p { font-size: 1rem; line-height: 26px; }
+  .essay-body .essay-end { margin-top: 24px; }
+  .section-head { margin-bottom: 28px; }
+
+  .bento { grid-auto-rows: auto auto 296px; }
+  .card { border-radius: 16px; }
+  .card h3 { padding: 24px 20px 0; font-size: 1.25rem; line-height: 28px; }
+  .card-desc { padding: 6px 20px 0; font-size: 0.875rem; line-height: 22px; }
+  .card-visual { padding: 20px 20px 0; }
+
+  /* The app pictures take a little of the card's inset back, so a line of
+     the note fits the way it does on the Mac. */
+  .card--markdown .card-visual,
+  .card--own .card-visual { padding-inline: 12px; }
+  .md-doc { padding: 24px 20px 0; font-size: 13px; line-height: 22px; }
+  .md-h { font-size: 20px; line-height: 28px; }
+  .finder { font-size: 12px; }
+  .f-row { height: 30px; }
+
+  /* The hub keeps its name; the notes beside it shrink to their icons, like
+     ports on it, instead of being cut off mid-word. */
+  .card--links .card-visual { padding: 20px 8px 24px; }
+  .link-stage { font-size: 12px; }
+  .link-row { gap: 12px; }
+  .link-row .n-chip { max-width: calc(50% - 6px); }
+  .n-chip { gap: 6px; padding: 6px 10px; }
+  .n-hub-row { gap: 20px; margin: 36px 0; }
+  .n-hub-row .n-chip { padding: 9px; border-radius: 50%; }
+  .n-hub-row .n-chip > span { display: none; }
+  .n-hub { padding: 10px 14px; font-size: 13px; }
+
+  .more-label { margin-top: 56px; margin-bottom: 28px; font-size: 1.375rem; line-height: 32px; gap: 16px; }
+  .more { grid-template-columns: minmax(0, 1fr); row-gap: 36px; }
+
+  /* Icon on the left, the copy hung from the tile's top edge. */
+  .mini-card {
+    grid-template-columns: 36px minmax(0, 1fr);
+    column-gap: 14px;
+    justify-items: start;
+    text-align: left;
+  }
+
+  .mini-card .mc-icon { grid-row: span 2; width: 36px; height: 36px; margin-bottom: 0; border-radius: 9px; }
+  .mc-icon svg { width: 18px; height: 18px; }
+  /* -3px lifts the capitals, not the line box, to the tile's edge. */
+  .mini-card h3 { margin-top: -3px; font-size: 0.9375rem; line-height: 20px; }
+  .mini-card p { margin-top: 2px; font-size: 0.875rem; line-height: 20px; }
+
+  .closing h2 { margin-top: 20px; }
 }
 
 /* ───────────── Closing ───────────── */
@@ -1913,17 +2051,33 @@ h2 {
   margin-inline: auto;
 }
 
-@media (max-width: 520px) {
+/* Phones keep the footer to the credit alone, centred, and give the
+   wordmark the screen's whole width. Its squares stay crisp by snapping the
+   width to whole device pixels per square: 100.2 units over the display's
+   pixel ratio. */
+@media (max-width: 640px) {
   .footer {
-    grid-template-columns: 1fr;
-    justify-items: center;
+    display: block;
+    padding: 24px 0 32px;
+    font-size: 0.8125rem;
     text-align: center;
   }
 
-  .footer-leaf { order: -1; }
-  .footer nav { justify-content: center; }
+  .footer-leaf,
+  .footer nav { display: none; }
+
+  .footer-mark {
+    width: 100%;
+    aspect-ratio: auto;
+    margin-top: 0;
+  }
+
+  .footer-mark img { width: round(down, 100% - 16px, 50.1px); }
 }
 
+@media (max-width: 640px) and (min-resolution: 3dppx) {
+  .footer-mark img { width: round(down, 100% - 16px, 33.4px); }
+}
 /* ───────────── Grid overlay ─────────────
    Press G to show the 12 columns and the 8px rhythm; G again hides them. */
 

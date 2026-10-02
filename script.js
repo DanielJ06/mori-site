@@ -137,9 +137,11 @@
     sides(canvas, t) {
       const { ctx, width, height, dot, snap } = fitCanvas(canvas);
       const PITCH = 6;
-      // The centre stays clear for the copy: on a narrow screen the field
-      // shrinks to the margins, and it reaches a little further in as it arrives.
-      const reach = Math.min(width * 0.5, Math.max(40, (width - 380) / 2)) * (0.75 + 0.25 * t);
+      // The centre stays clear for the copy, and the field reaches a little
+      // further in as it arrives. A phone has no margins to spare, so there
+      // it takes a share of the width and lets the copy's edges overlap it.
+      const room = width < 640 ? width * 0.3 : Math.min(width * 0.5, Math.max(40, (width - 380) / 2));
+      const reach = room * (0.75 + 0.25 * t);
       const cols = Math.ceil(width / PITCH);
       const rows = Math.floor(height / PITCH);
       const rand = seeded(31);
@@ -245,6 +247,11 @@
   /* ───── Hero editor ─────
      Type a sentence, open wikilink suggestions, pick one. */
 
+  const phone = window.matchMedia('(max-width: 640px)');
+
+  // iOS only applies :active to a touch when something listens for touches.
+  document.addEventListener('touchstart', () => {}, { passive: true });
+
   const editor = document.querySelector('.w-editor');
   if (editor) runEditorDemo(editor);
 
@@ -290,9 +297,10 @@
     };
 
     const openSuggest = () => {
+      suggest.hidden = false; // measured below, so shown first (same frame: it never paints unplaced)
       const ed = editor.getBoundingClientRect();
       const c = caret.getBoundingClientRect();
-      const left = Math.min(c.left - ed.left - 14, ed.width - 232 - 12);
+      const left = Math.min(c.left - ed.left - 14, ed.width - suggest.offsetWidth - 12);
       suggest.style.left = `${Math.max(12, left)}px`;
       suggest.style.top = `${c.bottom - ed.top + 6}px`;
       filter('');
@@ -437,6 +445,16 @@
     const PLAYS = 2;
     let timer = null;
     let plays = 0;
+
+    // A tap is the touch screen's hover: it plays one more pass.
+    let replay = null;
+    card.addEventListener('click', () => {
+      clearInterval(timer);
+      clearTimeout(replay);
+      plays = PLAYS;
+      play();
+      replay = setTimeout(rewind, demo.hold);
+    });
     const io = new IntersectionObserver(([entry]) => {
       clearInterval(timer);
       if (!entry.isIntersecting) return rewind();
@@ -455,6 +473,43 @@
     }, { threshold: 0.6 });
     io.observe(card);
   });
+
+  /* ───── Themes deck, on a phone ─────
+     The three notes stack; a tap sends the front one to the back. On first
+     sight the deck deals itself once round, ending where it began. */
+
+  const deck = document.querySelector('.deck');
+  if (deck && phone.matches) runThemeDeck(deck);
+
+  function runThemeDeck(deck) {
+    const pages = [...deck.querySelectorAll('.t-page')];
+    const depth = (page) => Number(page.style.getPropertyValue('--k'));
+    let busy = false;
+
+    const deal = async () => {
+      if (busy) return;
+      busy = true;
+      const front = pages.find((page) => depth(page) === 0);
+      if (!reduceMotion) {
+        front.classList.add('is-leaving');
+        await wait(240);
+      }
+      pages.forEach((page) => page.style.setProperty('--k', (depth(page) + pages.length - 1) % pages.length));
+      front.classList.remove('is-leaving');
+      await wait(reduceMotion ? 0 : 420);
+      busy = false;
+    };
+
+    let auto = !reduceMotion;
+    deck.closest('.card-visual').addEventListener('click', () => { auto = false; deal(); });
+    if (!auto) return;
+    onSeen(deck, async () => {
+      for (let i = 0; i < pages.length && auto; i++) {
+        await wait(i === 0 ? 900 : 2200);
+        if (auto) await deal();
+      }
+    }, 0.6);
+  }
 
   /* A hub and its spokes. Every note that links to the one in the middle gets
      a circuit-like line into it: out of the note's edge, along the gap, then
