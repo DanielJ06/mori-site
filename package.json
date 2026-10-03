@@ -1,0 +1,8 @@
+{
+  "name": "mori-site",
+  "private": true,
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --dev"
+  }
+}

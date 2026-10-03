@@ -1,0 +1,148 @@
+{
+  "locale": { "lang": "pt-BR", "og": "pt_BR", "name": "Português" },
+
+  "meta": {
+    "title": "Mori — Notas para Mac",
+    "description": "Mori é um app de notas para Mac. Você escreve em Markdown, liga uma nota à outra e tudo fica salvo em arquivos no seu computador.",
+    "ogTitle": "Mori — Onde suas ideias ganham forma",
+    "ogDescription": "Um app de notas para Mac. Cada nota é um arquivo seu, numa pasta do seu computador."
+  },
+
+  "nav": { "label": "Principal" },
+  "download": { "label": "Download", "subject": "Mori%20para%20Mac" },
+  "hero": { "before": "Onde suas", "tag": "ideias", "after": "ganham forma." },
+
+  "app": {
+    "label": "O app",
+    "window": "Janela do Mori com a barra lateral de tags, a lista de notas e o editor mostrando a nota “Domingo 27 de set.”.",
+    "notes": "Notas",
+    "archive": "Arquivo",
+    "search": "Pesquisar notas",
+    "tags": {
+      "journal": "diario",
+      "september": "setembro",
+      "studies": "estudos",
+      "people": "pessoas",
+      "grandma": "vó",
+      "recipes": "receitas",
+      "travel": "viagens"
+    },
+    "note": {
+      "cake": { "title": "Bolo de fubá da vó", "date": "2 de set.", "text": "3 ovos, 2 xícaras de fubá e um punhado de erva-doce. Sem erva-doce não é o dela." },
+      "sunday": { "title": "Domingo 27 de set.", "date": "27 de set.", "text": "Acordei sem despertador. Café na varanda…" },
+      "saturday": { "title": "Sábado 26 de set.", "date": "26 de set.", "text": "Choveu a manhã inteira. Enfim arrumei o escritório." },
+      "friday": { "title": "Sexta 25 de set.", "date": "25 de set.", "text": "Cancelaram a reunião das três. Passei a tarde lendo." },
+      "kant": { "title": "Aula de Filosofia: Kant", "date": "24 de set.", "text": "Sintético a priori: ainda não entendi. Perguntar na próxima aula." },
+      "lisbon": { "title": "Viagem a Lisboa", "date": "20 de set.", "text": "Voo dia 12 de outubro. Ver se o hotel em Alfama tem elevador." },
+      "crazy": { "title": "Um brinde aos loucos", "date": "11 de set.", "text": "Os desajustados. Os rebeldes. Os encrenqueiros." }
+    },
+    "editor": {
+      "body": "Acordei sem despertador. Café na varanda, depois pedalei até a feira e voltei com manjericão, tomate e um Rubem Braga usado por cinco reais.",
+      "call": "À noite liguei pra vó.",
+      "typed": "Ela diz que eu sempre erro o ",
+      "typedEnd": ".",
+      "buy": "Comprar fubá e erva-doce",
+      "callAmanda": "Ligar pra Amanda",
+      "differently": "Os que veem as coisas de outro jeito."
+    },
+    "suggest": { "label": "Notas sugeridas", "query": "Bol" }
+  },
+
+  "essay": {
+    "title": "Escrever é uma forma de pensar.",
+    "p1": "Algumas ideias parecem claras até tentarmos colocá-las em palavras.",
+    "p2": "Escrever faz o pensamento ir mais devagar, o bastante para você ver o que está pensando. Uma frase puxa a outra, aparece uma pergunta que você nem tinha feito e, aos poucos, o que estava solto se arruma.",
+    "end": "Fiz o&nbsp;Mori para esse momento.",
+    "art": "Uma folha de papel flutuando entre outras, com a frase escrita à mão: “Talvez escrever seja apenas ser. Um jeito mais lento de se encontrar no meio do próprio pensamento.” No canto, uma flor seca."
+  },
+
+  "features": {
+    "title": "Feito para quem pensa escrevendo.",
+    "intro": "Sem blocos, sem bancos de dados, sem painel de controle. Só texto, do jeito que ele sempre funcionou, com o que faltava para ele crescer.",
+    "more": "E muito mais:"
+  },
+
+  "markdown": {
+    "title": "Markdown sem as marcas.",
+    "desc": "Os símbolos aparecem enquanto você digita e se recolhem logo em seguida. Você escreve em Markdown e lê só o texto.",
+    "demo": "Uma nota sendo escrita no Mori: cada marcação Markdown aparece enquanto é digitada e some quando o cursor sai dela.",
+    "heading": "Conto sem nome",
+    "before": "Ela acorda e ",
+    "highlight": "não reconhece a própria casa",
+    "middle": ". Ainda não sei por quê, mas ",
+    "bold": "é por aí",
+    "after": ".",
+    "task": "Escrever pelo menos uma página"
+  },
+
+  "links": {
+    "title": "Conecte suas notas.",
+    "desc": "Ligue tudo com tudo: ideias, pessoas, lugares, livros e o que mais vier.",
+    "site": "receitas.com.br",
+    "file": "bolo.pdf",
+    "family": "família",
+    "birthday": "Aniversário da Amanda"
+  },
+
+  "own": {
+    "title": "Seus pensamentos são seus.",
+    "desc": "Tudo fica no seu computador. Abra em qualquer app, hoje ou daqui a vinte anos.",
+    "files": {
+      "sunday": "Domingo 27 de setembro",
+      "saturday": "Sábado 26 de setembro",
+      "kant": "Aula de Filosofia",
+      "groceries": "Lista de mercado"
+    },
+    "times": {
+      "sunday": "Agora",
+      "saturday": "Ontem",
+      "kant": "Qui",
+      "lisbon": "20 set",
+      "crazy": "11 set",
+      "cake": "2 set",
+      "groceries": "24 ago",
+      "birthday": "18 ago"
+    }
+  },
+
+  "themes": {
+    "title": "Temas acertados tom a tom.",
+    "desc": "Nanquim, Pergaminho e Floresta. Do papel à tinta, até a página parecer sua.",
+    "forest": {
+      "title": "Horta da varanda",
+      "tag": "plantas",
+      "text": "O manjericão pegou. O tomate-cereja ainda não decidiu se vai.",
+      "done": "Trocar a terra do vaso grande",
+      "todo": "Regar antes das nove"
+    },
+    "parchment": {
+      "before": "Acordei sem despertador. Café na varanda, depois pedalei até a feira e voltei com ",
+      "mark": "um Rubem Braga usado",
+      "after": " por cinco reais.",
+      "done": "Ligar pra vó"
+    },
+    "ink": {
+      "tag": "citações",
+      "quote": "Os loucos o bastante para achar que podem mudar o mundo são os que mudam.",
+      "note": "Lembrar disso nas segundas-feiras."
+    }
+  },
+
+  "more": {
+    "tags": { "title": "Organize com tags aninhadas", "text": "Sua nota em mais de um lugar ao mesmo tempo" },
+    "offline": { "title": "Offline-first", "text": "Sem nuvem, sem conta e sem precisar de internet" },
+    "search": { "title": "Busca instantânea", "text": "Acha a nota antes de você terminar de digitar" },
+    "focus": { "title": "Modo foco", "text": "Esconda a interface com um atalho e escreva sem distração" },
+    "keys": { "title": "Feito para o teclado", "text": "Navegação pelo teclado e uma paleta de comandos que agiliza tudo" },
+    "code": { "title": "Código e diagramas", "text": "Suporte a mais de 190 linguagens e a matemática em LaTeX" }
+  },
+
+  "closing": { "line1": "Sua próxima ideia", "line2": "começa aqui" },
+
+  "footer": {
+    "madeWith": "Feito com",
+    "love": "coração",
+    "by": "por",
+    "nav": "Redes e idioma"
+  }
+}

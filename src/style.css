@@ -2051,10 +2051,10 @@ h2 {
   margin-inline: auto;
 }
 
-/* Phones keep the footer to the credit alone, centred, and give the
-   wordmark the screen's whole width. Its squares stay crisp by snapping the
-   width to whole device pixels per square: 100.2 units over the display's
-   pixel ratio. */
+/* Phones keep the footer to the credit and the language switch, centred,
+   and give the wordmark the screen's whole width. Its squares stay crisp by
+   snapping the width to whole device pixels per square: 100.2 units over
+   the display's pixel ratio. */
 @media (max-width: 640px) {
   .footer {
     display: block;
@@ -2064,7 +2064,12 @@ h2 {
   }
 
   .footer-leaf,
-  .footer nav { display: none; }
+  .footer nav a:not(.footer-lang) { display: none; }
+
+  .footer nav {
+    justify-content: center;
+    margin-top: 8px;
+  }
 
   .footer-mark {
     width: 100%;

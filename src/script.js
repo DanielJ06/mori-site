@@ -203,6 +203,12 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
+  /* Language — a pick in the footer sticks, so the English page stops
+     sending this reader to the Portuguese one by browser language. */
+  document.querySelectorAll('[data-lang]').forEach((link) => link.addEventListener('click', () => {
+    try { localStorage.setItem('lang', link.dataset.lang); } catch {}
+  }));
+
   /* Reveal on scroll. */
   document.querySelectorAll('.bento > .card').forEach((el, i) => el.style.setProperty('--d', `${(i % 2) * 70}ms`));
   document.querySelectorAll('.more > li').forEach((el, i) => el.style.setProperty('--d', `${(i % 3) * 70}ms`));
@@ -322,7 +328,7 @@
     openSuggest();
     await wait(700);
 
-    for (const char of 'Bol') {
+    for (const char of suggest.dataset.query) {
       caret.classList.add('is-typing');
       typed.textContent += char;
       filter(typed.textContent.split('[[')[1]);

@@ -1,0 +1,148 @@
+{
+  "locale": { "lang": "en", "og": "en_US", "name": "English" },
+
+  "meta": {
+    "title": "Mori — Notes for Mac",
+    "description": "Mori is a notes app for Mac. You write in Markdown, link one note to another, and everything is saved as files on your computer.",
+    "ogTitle": "Mori — Where your ideas take shape",
+    "ogDescription": "A notes app for Mac. Every note is a file of your own, in a folder on your computer."
+  },
+
+  "nav": { "label": "Main" },
+  "download": { "label": "Download", "subject": "Mori%20for%20Mac" },
+  "hero": { "before": "Where your", "tag": "ideas", "after": "take shape." },
+
+  "app": {
+    "label": "The app",
+    "window": "The Mori window, with the tags sidebar, the list of notes and the editor showing the note “Sunday, Sep 27”.",
+    "notes": "Notes",
+    "archive": "Archive",
+    "search": "Search notes",
+    "tags": {
+      "journal": "journal",
+      "september": "september",
+      "studies": "studies",
+      "people": "people",
+      "grandma": "grandma",
+      "recipes": "recipes",
+      "travel": "travel"
+    },
+    "note": {
+      "cake": { "title": "Grandma’s corn cake", "date": "Sep 2", "text": "3 eggs, 2 cups of cornmeal and a handful of fennel seeds. Without the fennel, it isn’t hers." },
+      "sunday": { "title": "Sunday, Sep 27", "date": "Sep 27", "text": "Woke up without an alarm. Coffee on the porch…" },
+      "saturday": { "title": "Saturday, Sep 26", "date": "Sep 26", "text": "It rained all morning. Finally tidied up the office." },
+      "friday": { "title": "Friday, Sep 25", "date": "Sep 25", "text": "The three o’clock meeting got canceled. Spent the afternoon reading." },
+      "kant": { "title": "Philosophy class: Kant", "date": "Sep 24", "text": "Synthetic a priori: still don’t get it. Ask about it next class." },
+      "lisbon": { "title": "Trip to Lisbon", "date": "Sep 20", "text": "Flight on October 12. Check if the hotel in Alfama has an elevator." },
+      "crazy": { "title": "Here’s to the crazy ones", "date": "Sep 11", "text": "The misfits. The rebels. The troublemakers." }
+    },
+    "editor": {
+      "body": "Woke up without an alarm. Coffee on the porch, then I biked to the farmers market and came back with basil, tomatoes and a used Mary Oliver for five dollars.",
+      "call": "Called Grandma tonight.",
+      "typed": "She says I always get the ",
+      "typedEnd": " wrong.",
+      "buy": "Buy cornmeal and fennel",
+      "callAmanda": "Call Amanda",
+      "differently": "The ones who see things differently."
+    },
+    "suggest": { "label": "Suggested notes", "query": "Gra" }
+  },
+
+  "essay": {
+    "title": "Writing is a way of thinking.",
+    "p1": "Some ideas seem clear until we try to put them into words.",
+    "p2": "Writing slows your thinking down, just enough for you to see what you’re thinking. One sentence leads to the next, a question you hadn’t even asked shows up and, little by little, what was loose falls into place.",
+    "end": "I made Mori for that&nbsp;moment.",
+    "art": "A sheet of paper floating among others, with a sentence handwritten in Portuguese: “Maybe writing is simply being. A slower way of finding yourself in the middle of your own thoughts.” In the corner, a dried flower."
+  },
+
+  "features": {
+    "title": "Made for people who think by writing.",
+    "intro": "No blocks, no databases, no dashboards. Just text, the way it has always worked, with what it was missing to grow.",
+    "more": "And much more:"
+  },
+
+  "markdown": {
+    "title": "Markdown, minus the marks.",
+    "desc": "The symbols show up while you type and tuck themselves away right after. You write in Markdown and read only the text.",
+    "demo": "A note being written in Mori: each piece of Markdown shows up as it’s typed and disappears once the cursor leaves it.",
+    "heading": "Untitled story",
+    "before": "She wakes up and ",
+    "highlight": "doesn’t recognize her own house",
+    "middle": ". I don’t know why yet, but ",
+    "bold": "this is it",
+    "after": ".",
+    "task": "Write at least one page"
+  },
+
+  "links": {
+    "title": "Connect your notes.",
+    "desc": "Link anything to anything: ideas, people, places, books and whatever comes next.",
+    "site": "recipes.com",
+    "file": "cake.pdf",
+    "family": "family",
+    "birthday": "Amanda’s birthday"
+  },
+
+  "own": {
+    "title": "Your thoughts are yours.",
+    "desc": "Everything stays on your computer. Open it in any app, today or twenty years from now.",
+    "files": {
+      "sunday": "Sunday, September 27",
+      "saturday": "Saturday, September 26",
+      "kant": "Philosophy class",
+      "groceries": "Grocery list"
+    },
+    "times": {
+      "sunday": "Now",
+      "saturday": "Yesterday",
+      "kant": "Thu",
+      "lisbon": "Sep 20",
+      "crazy": "Sep 11",
+      "cake": "Sep 2",
+      "groceries": "Aug 24",
+      "birthday": "Aug 18"
+    }
+  },
+
+  "themes": {
+    "title": "Themes tuned tone by tone.",
+    "desc": "Ink, Parchment and Forest. From the paper to the ink, until the page feels like yours.",
+    "forest": {
+      "title": "Porch garden",
+      "tag": "plants",
+      "text": "The basil took. The cherry tomatoes still haven’t made up their minds.",
+      "done": "Repot the big planter",
+      "todo": "Water before nine"
+    },
+    "parchment": {
+      "before": "Woke up without an alarm. Coffee on the porch, then I biked to the farmers market and came back with ",
+      "mark": "a used Mary Oliver",
+      "after": " for five dollars.",
+      "done": "Call Grandma"
+    },
+    "ink": {
+      "tag": "quotes",
+      "quote": "The people who are crazy enough to think they can change the world are the ones who do.",
+      "note": "Remember this on Mondays."
+    }
+  },
+
+  "more": {
+    "tags": { "title": "Organize with nested tags", "text": "One note in more than one place at the same time" },
+    "offline": { "title": "Offline-first", "text": "No cloud, no account and no internet required" },
+    "search": { "title": "Instant search", "text": "Finds the note before you finish typing" },
+    "focus": { "title": "Focus mode", "text": "Hide the interface with a shortcut and write without distractions" },
+    "keys": { "title": "Built for the keyboard", "text": "Keyboard navigation and a command palette that speeds everything up" },
+    "code": { "title": "Code and diagrams", "text": "Support for over 190 languages and LaTeX math" }
+  },
+
+  "closing": { "line1": "Your next idea", "line2": "starts here" },
+
+  "footer": {
+    "madeWith": "Made with",
+    "love": "love",
+    "by": "by",
+    "nav": "Social and language"
+  }
+}
