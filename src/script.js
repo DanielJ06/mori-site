@@ -31,6 +31,13 @@
      Dots are 1.5px, snapped to whole device pixels so they stay crisp: 2px
      on standard displays, 3 device pixels on retina. Randomness is seeded,
      so a resize or a scroll redraws the same pattern instead of reshuffling it. */
+  // Every field's dots: grey, some tinted with the accent. DOT_STRENGTH scales
+  // them all at once; lower is quieter.
+  const DOT_STRENGTH = 0.65;
+  const dotColor = (tint, alpha) => (tint
+    ? `rgba(122, 160, 238, ${(alpha + 0.08) * DOT_STRENGTH})`
+    : `rgba(196, 204, 220, ${alpha * DOT_STRENGTH})`);
+
   const seeded = (seed) => {
     let state = seed;
     return () => ((state = (state * 16807) % 2147483647) - 1) / 2147483646;
@@ -85,7 +92,7 @@
           if (n > vertical * horizontal * 0.85) continue;
           const tint = rand() < 0.12 + 0.3 * rise;
           const alpha = 0.16 + rand() * 0.42 * (0.4 + rise * 0.6);
-          ctx.fillStyle = tint ? `rgba(122, 160, 238, ${alpha + 0.08})` : `rgba(196, 204, 220, ${alpha})`;
+          ctx.fillStyle = dotColor(tint, alpha);
           ctx.fillRect(snap(x), snap(y), dot, dot);
         }
       }
@@ -128,7 +135,7 @@
           const x = left + c * PITCH + jx * reach;
           const y = r * PITCH + PITCH / 2 + jy * reach;
           const alpha = 0.14 + tone * 0.4 * (0.35 + depth * 0.65);
-          ctx.fillStyle = tint ? `rgba(122, 160, 238, ${alpha + 0.08})` : `rgba(196, 204, 220, ${alpha})`;
+          ctx.fillStyle = dotColor(tint, alpha);
           ctx.fillRect(snap(x), snap(y), dot, dot);
         }
       }
@@ -158,7 +165,7 @@
           if (inward >= 1) continue;
           if (n > (1 - inward) ** 1.5 * vertical * 0.85) continue;
           const alpha = (0.14 + tone * 0.4 * (0.4 + (1 - inward) * 0.6)) * (0.35 + (1 - inward) * 0.65);
-          ctx.fillStyle = tint ? `rgba(122, 160, 238, ${alpha + 0.08})` : `rgba(196, 204, 220, ${alpha})`;
+          ctx.fillStyle = dotColor(tint, alpha);
           ctx.fillRect(snap(x), snap(y), dot, dot);
         }
       }
