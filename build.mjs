@@ -30,7 +30,7 @@ const redirect = (pages) => `<script>
     })();
   </script>`;
 
-const flatten =(object, prefix = '') => Object.entries(object).reduce((flat, [key, value]) => (
+const flatten = (object, prefix = '') => Object.entries(object).reduce((flat, [key, value]) => (
   typeof value === 'object'
     ? { ...flat, ...flatten(value, `${prefix}${key}.`) }
     : { ...flat, [`${prefix}${key}`]: value }

@@ -311,7 +311,6 @@
       suggest.style.left = `${Math.max(12, left)}px`;
       suggest.style.top = `${c.bottom - ed.top + 6}px`;
       filter('');
-      suggest.hidden = false;
     };
 
     const closeSuggest = async () => {
