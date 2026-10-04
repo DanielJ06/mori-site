@@ -1,5 +1,5 @@
 {
-  "locale": { "lang": "pt-BR", "og": "pt_BR", "name": "Português" },
+  "locale": { "lang": "pt-BR", "og": "pt_BR" },
 
   "meta": {
     "title": "Mori — Notas para Mac",
@@ -143,6 +143,6 @@
     "madeWith": "Feito com",
     "love": "coração",
     "by": "por",
-    "nav": "Redes e idioma"
+    "nav": "Redes"
   }
 }

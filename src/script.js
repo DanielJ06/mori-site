@@ -210,12 +210,6 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  /* Language — a pick in the footer sticks, so the English page stops
-     sending this reader to the Portuguese one by browser language. */
-  document.querySelectorAll('[data-lang]').forEach((link) => link.addEventListener('click', () => {
-    try { localStorage.setItem('lang', link.dataset.lang); } catch {}
-  }));
-
   /* Reveal on scroll. */
   document.querySelectorAll('.bento > .card').forEach((el, i) => el.style.setProperty('--d', `${(i % 2) * 70}ms`));
   document.querySelectorAll('.more > li').forEach((el, i) => el.style.setProperty('--d', `${(i % 3) * 70}ms`));
@@ -391,7 +385,7 @@
     for (const [i, node] of nodes.entries()) {
       const next = node.parentElement.closest('.md-doc > *');
       if (next !== line) {
-        await wait(360); // Return.
+        await wait(500); // Return.
         line = next;
         line.classList.remove('is-pending');
       }
@@ -409,7 +403,7 @@
       caret.classList.add('is-typing');
       for (const char of texts[i]) {
         node.data += char;
-        await wait(32 + Math.random() * 36 + (char === ' ' ? 24 : 0));
+        await wait(45 + Math.random() * 50 + (char === ' ' ? 34 : 0));
       }
       caret.classList.remove('is-typing');
 
@@ -417,7 +411,7 @@
     }
 
     raw?.classList.remove('is-raw');
-    await wait(900);
+    await wait(1200);
     task.classList.add('is-checked');
   }
 

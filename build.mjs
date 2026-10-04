@@ -21,13 +21,11 @@ const OUT = 'dist';
 const TEMPLATE = 'index.html';
 
 // Only the default page carries this: readers whose browser asks for another
-// of the site's languages go to that page, unless they picked one in the footer.
+// of the site's languages go to that page.
 const redirect = (pages) => `<script>
     (() => {
       const pages = ${JSON.stringify(pages)};
-      let lang = null;
-      try { lang = localStorage.getItem('lang'); } catch {}
-      lang ??= (navigator.languages?.[0] ?? navigator.language ?? '').split('-')[0].toLowerCase();
+      const lang = (navigator.languages?.[0] ?? navigator.language ?? '').split('-')[0].toLowerCase();
       if (pages[lang]) location.replace(\`\${pages[lang]}\${location.search}\${location.hash}\`);
     })();
   </script>`;
@@ -61,9 +59,6 @@ function build() {
       'page.ogAlternates': others(locale)
         .map((l) => `<meta property="og:locale:alternate" content="${l.strings['locale.og']}">`)
         .join('\n  '),
-      'page.switcher': others(locale)
-        .map((l) => `<a class="footer-lang" href="${root}${l.path}" hreflang="${l.code}" lang="${l.strings['locale.lang']}" data-lang="${l.code}">${l.strings['locale.name']}</a>`)
-        .join('\n      '),
       'page.redirect': locale.path ? '' : redirect(Object.fromEntries(others(locale).map((l) => [l.code, l.path]))),
     };
     const values = { ...locale.strings, ...page };

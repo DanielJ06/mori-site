@@ -1,5 +1,5 @@
 {
-  "locale": { "lang": "en", "og": "en_US", "name": "English" },
+  "locale": { "lang": "en", "og": "en_US" },
 
   "meta": {
     "title": "Mori — Notes for Mac",
@@ -143,6 +143,6 @@
     "madeWith": "Made with",
     "love": "love",
     "by": "by",
-    "nav": "Social and language"
+    "nav": "Social"
   }
 }
