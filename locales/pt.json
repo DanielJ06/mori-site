@@ -48,12 +48,9 @@
     "suggest": { "label": "Notas sugeridas", "query": "Bol" }
   },
 
-  "essay": {
-    "title": "Escrever é uma forma de pensar.",
-    "p1": "Algumas ideias parecem claras até tentarmos colocá-las em palavras.",
-    "p2": "Escrever faz o pensamento ir mais devagar, o bastante para você ver o que está pensando. Uma frase puxa a outra, aparece uma pergunta que você nem tinha feito e, aos poucos, o que estava solto se arruma.",
-    "end": "Fiz o&nbsp;Mori para esse momento.",
-    "art": "Uma folha de papel flutuando entre outras, com a frase escrita à mão: “Talvez escrever seja apenas ser. Um jeito mais lento de se encontrar no meio do próprio pensamento.” No canto, uma flor seca."
+  "manifesto": {
+    "text": "Pense por escrito.",
+    "sub": "O Mori é um app de notas em Markdown para Mac. Escreva do seu jeito, ligue suas ideias e guarde tudo em arquivos seus."
   },
 
   "features": {
@@ -99,15 +96,15 @@
       "kant": "Qui",
       "lisbon": "20 set",
       "crazy": "11 set",
-      "cake": "2 set",
+      "cake": "02 set",
       "groceries": "24 ago",
       "birthday": "18 ago"
     }
   },
 
   "themes": {
-    "title": "Temas acertados tom a tom.",
-    "desc": "Nanquim, Pergaminho e Floresta. Do papel à tinta, até a página parecer sua.",
+    "title": "Faça suas notas brilharem.",
+    "desc": "Temas criados com cuidado para tornar o processo de escrita ainda mais especial.",
     "forest": {
       "title": "Horta da varanda",
       "tag": "plantas",

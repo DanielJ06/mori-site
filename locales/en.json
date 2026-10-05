@@ -48,12 +48,9 @@
     "suggest": { "label": "Suggested notes", "query": "Gra" }
   },
 
-  "essay": {
-    "title": "Writing is a way of thinking.",
-    "p1": "Some ideas seem clear until we try to put them into words.",
-    "p2": "Writing slows your thinking down, just enough for you to see what you’re thinking. One sentence leads to the next, a question you hadn’t even asked shows up and, little by little, what was loose falls into place.",
-    "end": "I made Mori for that&nbsp;moment.",
-    "art": "A sheet of paper floating among others, with a sentence handwritten in Portuguese: “Maybe writing is simply being. A slower way of finding yourself in the middle of your own thoughts.” In the corner, a dried flower."
+  "manifesto": {
+    "text": "Think in writing.",
+    "sub": "Mori is a Markdown notes app for Mac. Write your way, link your ideas, and keep everything in files you own."
   },
 
   "features": {
@@ -99,15 +96,15 @@
       "kant": "Thu",
       "lisbon": "Sep 20",
       "crazy": "Sep 11",
-      "cake": "Sep 2",
+      "cake": "Sep 02",
       "groceries": "Aug 24",
       "birthday": "Aug 18"
     }
   },
 
   "themes": {
-    "title": "Themes tuned tone by tone.",
-    "desc": "Ink, Parchment and Forest. From the paper to the ink, until the page feels like yours.",
+    "title": "Make your notes shine.",
+    "desc": "Themes crafted with care to make writing even more special.",
     "forest": {
       "title": "Porch garden",
       "tag": "plants",

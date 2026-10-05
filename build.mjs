@@ -8,6 +8,10 @@
 //
 //   node build.mjs         build once
 //   node build.mjs --dev   build, rebuild on every change, serve on :8000
+//
+// The dev server also adds Agentation's toolbar (agentation.com) to every page
+// it serves, for annotating the page for a coding agent. It's a React
+// component, loaded from esm.sh, and never written into dist/.
 
 import fs from 'node:fs';
 import http from 'node:http';
@@ -30,7 +34,16 @@ const redirect = (pages) => `<script>
     })();
   </script>`;
 
-const flatten = (object, prefix = '') => Object.entries(object).reduce((flat, [key, value]) => (
+// Annotations sync to the agentation-mcp server on :4747 when it's running.
+const AGENTATION = `<script type="module">
+    import { createElement } from 'https://esm.sh/react@19.3.0';
+    import { createRoot } from 'https://esm.sh/react-dom@19.3.0/client?deps=react@19.3.0';
+    import { Agentation } from 'https://esm.sh/agentation@3.1.2?deps=react@19.3.0,react-dom@19.3.0';
+    const host = document.body.appendChild(document.createElement('div'));
+    createRoot(host).render(createElement(Agentation, { endpoint: 'http://localhost:4747' }));
+  </script>`;
+
+const flatten =(object, prefix = '') => Object.entries(object).reduce((flat, [key, value]) => (
   typeof value === 'object'
     ? { ...flat, ...flatten(value, `${prefix}${key}.`) }
     : { ...flat, [`${prefix}${key}`]: value }
@@ -123,6 +136,7 @@ if (!process.argv.includes('--dev')) {
     }
     fs.readFile(file, (error, data) => {
       if (error) return res.writeHead(404).end('Not found');
+      if (path.extname(file) === '.html') data = String(data).replace('</body>', `  ${AGENTATION}\n</body>`);
       res.writeHead(200, { 'Content-Type': types[path.extname(file)] ?? 'application/octet-stream' }).end(data);
     });
   }).listen(8000, () => console.log('Serving on http://localhost:8000'));

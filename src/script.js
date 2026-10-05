@@ -104,43 +104,9 @@
   /* Fields — the same dots as the horizon, drawn from a progress t: 0 as the
      field enters the screen, 1 once it sits above the middle, so it moves
      with the reader's scroll.
-       settle: loose dots fall into the page's 16px lattice, thinning out as
-               they rise: ideas turning into structure.
        sides:  dense at the page's edges, thinning toward the middle, so the
                closing's copy has the dark to itself. */
   const fields = {
-    settle(canvas, t) {
-      const { ctx, width, height, dot, snap } = fitCanvas(canvas);
-      const PITCH = 16;
-      const cols = Math.floor(width / PITCH);
-      const rows = Math.floor((height - 40) / PITCH);
-      const left = (width - (cols - 1) * PITCH) / 2;
-      const loose = 1 - t;
-      const rand = seeded(11);
-
-      for (let r = 0; r < rows; r++) {
-        const depth = (r + 1) / rows;             // 0 at the top, 1 at the bottom
-        for (let c = 0; c < cols; c++) {
-          // Always draw the same numbers, so a dot keeps its identity as it moves.
-          const n = rand();
-          const jx = rand() - 0.5;
-          const jy = rand() - 0.5;
-          const tint = rand() < 0.1 + 0.25 * depth;
-          const tone = rand();
-          const edge = Math.min(1, Math.min(c, cols - 1 - c) / (cols * 0.16));
-          // Under the essay's picture the dots lean to the right, then even out.
-          const lean = (1 - depth) * (0.35 + (0.65 * c) / cols) + depth;
-          if (n > (0.05 + 0.55 * depth ** 1.5) * edge * lean) continue;
-          const reach = 56 * loose * (1.15 - depth);
-          const x = left + c * PITCH + jx * reach;
-          const y = r * PITCH + PITCH / 2 + jy * reach;
-          const alpha = 0.14 + tone * 0.4 * (0.35 + depth * 0.65);
-          ctx.fillStyle = dotColor(tint, alpha);
-          ctx.fillRect(snap(x), snap(y), dot, dot);
-        }
-      }
-    },
-
     sides(canvas, t) {
       const { ctx, width, height, dot, snap } = fitCanvas(canvas);
       const PITCH = 6;

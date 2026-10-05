@@ -164,23 +164,10 @@
     </div>
   </section>
 
-  <!-- 2. It takes shape -->
-  <section class="essay" aria-labelledby="essay-title">
-    <div class="essay-copy wrap">
-      <h2 id="essay-title" data-reveal>{{essay.title}}</h2>
-      <div class="essay-body" data-reveal>
-        <p>{{essay.p1}}</p>
-        <p>{{essay.p2}}</p>
-        <p class="essay-end">{{essay.end}}</p>
-      </div>
-    </div>
-    <!-- Loose ideas settle onto the grid, over the picture and the copy's ground -->
-    <div class="essay-dots" aria-hidden="true">
-      <canvas data-field="settle"></canvas>
-    </div>
-    <figure class="essay-art" data-reveal>
-      <img src="{{page.root}}assets/pages.webp" width="1672" height="941" loading="lazy" decoding="async" alt="{{essay.art}}">
-    </figure>
+  <!-- 2. It takes shape: a line that is written as you scroll -->
+  <section class="manifesto wrap" aria-labelledby="manifesto-title">
+    <h2 id="manifesto-title" data-reveal>{{manifesto.text}}</h2>
+    <p class="manifesto-sub" data-reveal>{{manifesto.sub}}</p>
   </section>
 
   <!-- 3. It grows -->
@@ -197,7 +184,7 @@
         <p class="card-desc">{{markdown.desc}}</p>
         <div class="card-visual">
           <div class="md-page" role="img" aria-label="{{markdown.demo}}">
-            <div class="md-bar" aria-hidden="true"><span class="t-lights"><i></i><i></i><i></i></span><b class="w-aa">Aa</b></div>
+            <div class="md-bar" aria-hidden="true"><span class="t-lights"><i></i><i></i><i></i></span><span class="md-file">{{markdown.heading}}.md</span></div>
             <div class="md-doc" aria-hidden="true">
               <p class="md-h" data-md><span class="md-mark"># </span>{{markdown.heading}} 🌿</p>
               <p>{{markdown.before}}<span class="md-hl is-done" data-md><span class="md-mark">==</span>{{markdown.highlight}}<span class="md-mark">==</span></span>{{markdown.middle}}<span class="md-b is-done" data-md><span class="md-mark">**</span>{{markdown.bold}}<span class="md-mark">**</span></span>{{markdown.after}}</p>
@@ -235,7 +222,7 @@
         <p class="card-desc">{{own.desc}}</p>
         <div class="card-visual">
           <div class="finder" aria-hidden="true">
-            <div class="f-bar"><i></i><i></i><i></i><span><svg viewBox="0 0 16 16"><path d="M1.5 4v9h13V5.5H7.5L6.2 4z"/></svg>{{app.notes}}</span></div>
+            <div class="f-bar"><i></i><i></i><i></i><span>{{app.notes}}</span></div>
             <span class="f-row"><svg viewBox="0 0 16 16"><path d="M3.5 2.5h6l3 3v8h-9z"/><path d="M9.5 2.5v3h3"/></svg><span class="f-name">{{own.files.sunday}}.md</span><time>{{own.times.sunday}}</time></span>
             <span class="f-row"><svg viewBox="0 0 16 16"><path d="M3.5 2.5h6l3 3v8h-9z"/><path d="M9.5 2.5v3h3"/></svg><span class="f-name">{{own.files.saturday}}.md</span><time>{{own.times.saturday}}</time></span>
             <span class="f-row"><svg viewBox="0 0 16 16"><path d="M3.5 2.5h6l3 3v8h-9z"/><path d="M9.5 2.5v3h3"/></svg><span class="f-name">{{own.files.kant}}.md</span><time>{{own.times.kant}}</time></span>
