@@ -50,7 +50,19 @@
 
   "manifesto": {
     "text": "Think in writing.",
-    "sub": "Mori is a Markdown notes app for Mac. Write your way, link your ideas, and keep everything in files you own."
+    "sub": "Mori is a Markdown notes app for Mac. Write your way, link your ideas, and keep everything in files you own.",
+    "one": {
+      "title": "Jot it down",
+      "text": "Mori opens fast and drops you on a blank page."
+    },
+    "two": {
+      "title": "Connect your ideas",
+      "text": "One note leads to another with links and tags, the way thinking moves."
+    },
+    "three": {
+      "title": "Keep it your way",
+      "text": "Everything in .md files in your folder, no account and no cloud."
+    }
   },
 
   "features": {

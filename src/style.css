@@ -950,23 +950,7 @@ h2 {
 .manifesto {
   position: relative;
   isolation: isolate;
-  margin-top: calc(var(--rest-period) * 0.8);
-}
-
-/* A soft wash of the accent behind the sentence: wide and low, a lamp over
-   a page rather than the hero's glow, so the pause isn't empty dark. */
-.manifesto::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  top: 50%;
-  left: 50%;
-  width: min(1100px, 100vw);
-  height: 420px;
-  translate: -50% -50%;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--p-accent) 20%, transparent), transparent 100%);
-  opacity: 0.6;
-  pointer-events: none;
+  margin-top: calc(var(--rest-period) * 0.6);
 }
 
 .manifesto h2 {
@@ -989,6 +973,63 @@ h2 {
   text-align: center;
   color: var(--muted);
   text-wrap: balance;
+}
+
+/* Three small scenes, each with a serif title and one line under it. */
+.manifesto-cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 56px var(--gutter);
+  margin-top: 96px;
+  list-style: none;
+  text-align: center;
+}
+
+.m-art {
+  display: block;
+  width: auto;
+  height: var(--art-h);
+  /* The pictures are cropped to their ink, so the heights below are what
+     balances them: the typewriter and the files box are wide and low, the
+     box of floating objects is taller and a little narrower. Margins hang
+     them all from one baseline. */
+  margin: calc(var(--art-max) - var(--art-h)) auto 36px;
+  /* Ink on transparent: the paper reads as white on the dark page, so it is
+     dimmed to sit with the rest of the type. The files themselves have their
+     blacks lifted to a dark grey (#202020), so the ink stays readable on the
+     page instead of melting into it. */
+  opacity: 0.85;
+}
+
+.manifesto-cols { --art-max: 190px; }
+.manifesto-cols li:nth-child(1) .m-art { --art-h: 160px; }
+.manifesto-cols li:nth-child(2) .m-art { --art-h: 190px; }
+.manifesto-cols li:nth-child(3) .m-art { --art-h: 160px; scale: -1 1; } /* mirrored to face the middle */
+
+.manifesto-cols h3 {
+  max-width: 14em;
+  margin-inline: auto;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 1.3rem;
+  line-height: 28px;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+  text-wrap: balance;
+}
+
+.manifesto-cols p {
+  max-width: 20rem;
+  margin: 8px auto 0;
+  font-size: 0.95rem;
+  line-height: 24px;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+@media (max-width: 800px) {
+  .manifesto-cols { grid-template-columns: 1fr; gap: 48px; margin-top: 64px; }
+  .m-art { margin-top: 0; }
 }
 
 /* ───────────── Highlights ───────────── */

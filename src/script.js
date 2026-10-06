@@ -178,6 +178,7 @@
 
   /* Reveal on scroll. */
   document.querySelectorAll('.bento > .card').forEach((el, i) => el.style.setProperty('--d', `${(i % 2) * 70}ms`));
+  document.querySelectorAll('.manifesto-cols > li').forEach((el, i) => el.style.setProperty('--d', `${i * 70}ms`));
   document.querySelectorAll('.more > li').forEach((el, i) => el.style.setProperty('--d', `${(i % 3) * 70}ms`));
   const revealer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {

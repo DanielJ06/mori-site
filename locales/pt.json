@@ -50,7 +50,19 @@
 
   "manifesto": {
     "text": "Pense por escrito.",
-    "sub": "O Mori é um app de notas em Markdown para Mac. Escreva do seu jeito, ligue suas ideias e guarde tudo em arquivos seus."
+    "sub": "O Mori é um app de notas em Markdown para Mac. Escreva do seu jeito, ligue suas ideias e guarde tudo em arquivos seus.",
+    "one": {
+      "title": "Anote na hora",
+      "text": "O Mori abre rápido e já te deixa numa página em branco."
+    },
+    "two": {
+      "title": "Ligue as ideias",
+      "text": "Uma nota leva à outra com links e tags, do jeito que o pensamento anda."
+    },
+    "three": {
+      "title": "Guarde do seu jeito",
+      "text": "Tudo em arquivos .md na sua pasta, sem conta e sem nuvem."
+    }
   },
 
   "features": {
